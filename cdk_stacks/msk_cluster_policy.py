@@ -15,7 +15,7 @@ from constructs import Construct
 def get_msk_cluster_arn(msk_cluster_name, region_name):
   client = boto3.client('kafka', region_name=region_name)
   response = client.list_clusters_v2(ClusterNameFilter=msk_cluster_name)
-  cluster_info_list = response['ClusterInfoList']
+  cluster_info_list = [e for e in response['ClusterInfoList'] if e['ClusterName'] == msk_cluster_name]
   if not cluster_info_list:
     cluster_arn = f"arn:aws:kafka:{cdk.Aws.REGION}:{cdk.Aws.ACCOUNT_ID}:cluster/{msk_cluster_name}/*"
   else:

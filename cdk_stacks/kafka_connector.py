@@ -18,7 +18,7 @@ from constructs import Construct
 def get_kafka_booststrap_servers(kafka_cluster_name, region_name):
   client = boto3.client('kafka', region_name=region_name)
   response = client.list_clusters_v2(ClusterNameFilter=kafka_cluster_name)
-  cluster_info_list = response['ClusterInfoList']
+  cluster_info_list = [e for e in response['ClusterInfoList'] if e['ClusterName'] == kafka_cluster_name]
   if not cluster_info_list:
     kafka_bootstrap_servers = "localhost:9094"
   else:
