@@ -614,6 +614,9 @@ Enjoy!
     topic.creation.default.partitions=-1
     topic.creation.default.replication.factor=-1
     ```
+
+ * [(aws-samples) Build Data Analytics using Amazon Data Migration Service(DMS)](https://github.com/aws-samples/aws-dms-cdc-data-pipeline)
+
  * [Connect using the EC2 Instance Connect CLI](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-connect-methods.html#ec2-instance-connect-connecting-ec2-cli)
    * mssh
      <pre>
