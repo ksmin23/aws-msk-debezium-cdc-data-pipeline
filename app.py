@@ -21,29 +21,29 @@ AWS_ENV = cdk.Environment(
 
 app = cdk.App()
 
-vpc_stack = VpcStack(app, 'MSKtoS3VpcStack3',
+vpc_stack = VpcStack(app, 'MSKtoS3VpcStack',
   env=AWS_ENV)
 
-aurora_mysql_stack = AuroraMysqlStack(app, 'AuroraMySQLAsDataSourceStack3',
+aurora_mysql_stack = AuroraMysqlStack(app, 'AuroraMySQLAsDataSourceStack',
   vpc_stack.vpc,
   env=AWS_ENV
 )
 aurora_mysql_stack.add_dependency(vpc_stack)
 
-msk_stack = MSKProvisionedStack(app, 'MSKStack3',
+msk_stack = MSKProvisionedStack(app, 'MSKStack',
   vpc_stack.vpc,
   env=AWS_ENV
 )
 msk_stack.add_dependency(aurora_mysql_stack)
 
-msk_policy_stack = MSKClusterPolicyStack(app, 'MSKClusterPolicy3',
+msk_policy_stack = MSKClusterPolicyStack(app, 'MSKClusterPolicy',
   vpc_stack.vpc,
   msk_stack.msk_cluster_name,
   env=AWS_ENV
 )
 msk_policy_stack.add_dependency(msk_stack)
 
-bastion_host = BastionHostEC2InstanceStack(app, 'BastionHost3',
+bastion_host = BastionHostEC2InstanceStack(app, 'BastionHost',
   vpc_stack.vpc,
   aurora_mysql_stack.sg_mysql_client,
   msk_stack.sg_msk_client,
@@ -52,7 +52,7 @@ bastion_host = BastionHostEC2InstanceStack(app, 'BastionHost3',
 )
 bastion_host.add_dependency(msk_policy_stack)
 
-msk_connector_stack = KafkaConnectorStack(app, 'KafkaConnectorStack3',
+msk_connector_stack = KafkaConnectorStack(app, 'KafkaConnectorStack',
   vpc_stack.vpc,
   aurora_mysql_stack.db_hostname,
   aurora_mysql_stack.sg_mysql_client,
@@ -63,12 +63,12 @@ msk_connector_stack = KafkaConnectorStack(app, 'KafkaConnectorStack3',
 )
 msk_connector_stack.add_dependency(bastion_host)
 
-s3_stack = S3Stack(app, 'S3AsFirehoseDestinationStack3',
+s3_stack = S3Stack(app, 'S3AsFirehoseDestinationStack',
   env=AWS_ENV
 )
 s3_stack.add_dependency(bastion_host)
 
-firehose_stack = KinesisFirehoseStack(app, 'FirehosefromMSKtoS3Stack3',
+firehose_stack = KinesisFirehoseStack(app, 'FirehosefromMSKtoS3Stack',
   msk_stack.msk_cluster_name,
   msk_stack.msk_cluster_arn,
   s3_stack.s3_bucket,
