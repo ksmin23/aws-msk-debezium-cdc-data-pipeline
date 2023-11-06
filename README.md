@@ -160,7 +160,10 @@ Create a MSK Cluster
 (.venv) $ cdk deploy MSKStack
 </pre>
 
-Once MSK cluster has been successfully created, update the MSK cluster configuration by running the following python scripts.
+Once MSK cluster has been successfully created,
+you should update the MSK cluster configuration by running the following python scripts
+in order to grant Kinesis Data Firehose to access Amazon MSK cluster.
+
 It will take at least `20~25` minutes to update the settings.
 Please wait until the MSK cluster status is `ACTIVE`.
 
@@ -170,7 +173,7 @@ Please wait until the MSK cluster status is `ACTIVE`.
 import boto3
 
 cluster_arn = 'arn:aws:kafka:<i>{region}</i>:cluster/<i>{msk-cluster-name}</i>/{random-identifier}'
-region = '<i>{region}</i>'
+region = '{<i>region</i>}'
 
 client = boto3.client('kafka', region_name=region)
 cluster_info = client.describe_cluster_v2(ClusterArn=cluster_arn)
@@ -200,13 +203,14 @@ response = client.update_security(ClientAuthentication=client_authentication,
 <pre>
 import boto3
 
-cluster_name = '<i>{msk-cluster-name}</i>'
-region = '<i>{region}</i>'
+cluster_name = '{<i>msk-cluster-name</i>}'
+region = '{<i>region</i>}'
 
 client = boto3.client('kafka', region_name=region)
 
 cluster_info_list = client.list_clusters_v2(ClusterNameFilter=cluster_name)['ClusterInfoList']
 cluster_info = [elem for elem in cluster_info_list if elem['ClusterName'] == cluster_name][0]
+
 cluster_arn = cluster_info['ClusterArn']
 current_version = cluster_info['CurrentVersion']
 
@@ -230,6 +234,10 @@ response = client.update_connectivity(ClusterArn=cluster_arn,
                                       CurrentVersion=current_version)
 
 </pre>
+
+Once MSK cluster **Security**, and **Network settings** has been successfully updated, you should see client information similar to the following example.
+
+![msk-bootstrap-servers-info](assets/msk-bootstrap-servers-info.png)
 
 ## (Step 3) Updating MSK Cluster Policy for Kinesis Data Firehose to be granted to access
 
@@ -599,6 +607,11 @@ Enjoy!
    * [Amazon MSK - Debezium source connector with configuration provider](https://docs.aws.amazon.com/msk/latest/developerguide/mkc-debeziumsource-connector-example.html)
  * [Amazon MSK Introduces Managed Data Delivery from Apache Kafka to Your Data Lake (2023-09-27)](https://aws.amazon.com/blogs/aws/amazon-msk-introduces-managed-data-delivery-from-apache-kafka-to-your-data-lake/)
  * [MSK -> Kinesis Data Streams (or Firehose) with Kafka-Kinesis-Connector](https://aws.amazon.com/ko/premiumsupport/knowledge-center/kinesis-kafka-connector-msk/) - How do I connect to my Amazon MSK cluster using the Kafka-Kinesis-Connector?
+ * [Amazon MSK multi-VPC private connectivity in a single Region](https://docs.aws.amazon.com/msk/latest/developerguide/aws-access-mult-vpc.html)
+   * **Requirements and limitations for multi-VPC private connectivity**
+     * Multi-VPC private connectivity is supported only on Apache Kafka 2.7.1 or higher. Make sure that any clients that you use with the MSK cluster are running Apache Kafka versions that are compatible with the cluster.
+     * Multi-VPC private connectivity supports auth types IAM, TLS and SASL/SCRAM. Unauthenticated clusters can't use multi-VPC private connectivity.
+     * Multi-VPC private connectivity doesn’t support the t3.small instance type.
  * [Build an end-to-end change data capture with Amazon MSK Connect and AWS Glue Schema Registry (2023-03-08)](https://aws.amazon.com/blogs/big-data/build-an-end-to-end-change-data-capture-with-amazon-msk-connect-and-aws-glue-schema-registry/)
  * [(Debezium Blog) Streaming MySQL Data Changes to Amazon Kinesis (2018-08-30)](https://debezium.io/blog/2018/08/30/streaming-mysql-data-changes-into-kinesis/)
  * [(AWS:rePost) How do I turn on binary logging for my Amazon Aurora MySQL-Compatible cluster?](https://repost.aws/knowledge-center/enable-binary-logging-aurora)
@@ -616,6 +629,8 @@ Enjoy!
     ```
 
  * [(aws-samples) Build Data Analytics using Amazon Data Migration Service(DMS)](https://github.com/aws-samples/aws-dms-cdc-data-pipeline)
+
+ * [Amazon MSK integrations - Kinesis Data Firehose](https://docs.aws.amazon.com/msk/latest/developerguide/integrations-kinesis-data-firehose.html)
 
  * [Connect using the EC2 Instance Connect CLI](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-connect-methods.html#ec2-instance-connect-connecting-ec2-cli)
    * mssh
