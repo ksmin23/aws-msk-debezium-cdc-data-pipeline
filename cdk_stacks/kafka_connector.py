@@ -33,8 +33,8 @@ def get_kafka_booststrap_servers(kafka_cluster_name, region_name):
   return kafka_bootstrap_servers
 
 
-def get_worker_configuration(worker_configuration_name):
-  client = boto3.client('kafkaconnect', region_name='us-east-1')
+def get_worker_configuration(worker_configuration_name, region):
+  client = boto3.client('kafkaconnect', region_name=region)
   response = client.list_worker_configurations()
   worker_configuration_list = response.get('workerConfigurations', [])
   if not worker_configuration_list:
@@ -52,8 +52,8 @@ def get_worker_configuration(worker_configuration_name):
   return ret
 
 
-def get_custom_plugin(custom_plugin_name):
-  client = boto3.client('kafkaconnect', region_name='us-east-1')
+def get_custom_plugin(custom_plugin_name, region):
+  client = boto3.client('kafkaconnect', region_name=region)
   response = client.list_custom_plugins()
   custom_plugin_list = response.get('customPlugins', [])
   if not custom_plugin_list:
@@ -83,10 +83,10 @@ class KafkaConnectorStack(Stack):
     kafka_booststrap_servers = get_kafka_booststrap_servers(msk_cluster_name, vpc.env.region)
 
     msk_connector_custom_plugin_name = self.node.try_get_context('msk_connector_custom_plugin_name')
-    msk_connector_custom_plugin = get_custom_plugin(msk_connector_custom_plugin_name)
+    msk_connector_custom_plugin = get_custom_plugin(msk_connector_custom_plugin_name, vpc.env.region)
 
     msk_connector_worker_configuration_name = self.node.try_get_context('msk_connector_worker_configuration_name')
-    msk_connector_worker_configuration = get_worker_configuration(msk_connector_worker_configuration_name)
+    msk_connector_worker_configuration = get_worker_configuration(msk_connector_worker_configuration_name, vpc.env.region)
 
     msk_connector_configuration = self.node.try_get_context('msk_connector_configuration')
     msk_connector_name = self.node.try_get_context('msk_connector_name')
