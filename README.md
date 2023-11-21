@@ -118,6 +118,17 @@ Before synthesizing the CloudFormation, make sure getting a Debezium source conn
       You should see output similar to the following example on the AWS Web console.
       ![msk-connect-worker-configurations](assets/msk-connect-worker-configurations.png)
 
+     - Woker configuration
+        <pre>
+        key.converter=org.apache.kafka.connect.storage.StringConverter
+        key.converter.schemas.enable=false
+        value.converter=org.apache.kafka.connect.json.JsonConverter
+        value.converter.schemas.enable=false
+        config.providers.secretManager.class=com.github.jcustenborder.kafka.config.aws.SecretsManagerConfigProvider
+        config.providers=secretManager
+        config.providers.secretManager.param.aws.region=us-east-1
+        </pre>
+
   :information_source: To learn more about how to create a Debezium source connector, see [Debezium source connector with configuration provider](https://docs.aws.amazon.com/msk/latest/developerguide/mkc-debeziumsource-connector-example.html)
 
 3. Set up the cdk context configuration file, `cdk.context.json`.
