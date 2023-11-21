@@ -129,7 +129,7 @@ Before synthesizing the CloudFormation, make sure getting a Debezium source conn
         config.providers.secretManager.param.aws.region=us-east-1
         </pre>
 
-  :information_source: To learn more about how to create a Debezium source connector, see [Debezium source connector with configuration provider](https://docs.aws.amazon.com/msk/latest/developerguide/mkc-debeziumsource-connector-example.html)
+    :information_source: To learn more about how to create a Debezium source connector, see [Debezium source connector with configuration provider](https://docs.aws.amazon.com/msk/latest/developerguide/mkc-debeziumsource-connector-example.html)
 
 3. Set up the cdk context configuration file, `cdk.context.json`.
 
